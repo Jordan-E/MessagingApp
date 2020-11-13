@@ -3,20 +3,35 @@ import socket
 
 class Client:
     def __init__(self):
-        s = socket.socket()
+        self.createSocket()
 
-        port = 20500
+    def createSocket(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
-        s.connect(('127.0.0.1', port))
+            port = 20500
+            ipAddr = '127.0.0.1'
+            s.connect((ipAddr, port))
 
-        message = s.recv(1024).decode()
-        print(message)
+            # Print out welcome message
+            message = s.recv(1024).decode()
+            print(message)
+            self.messageSending(s)
 
+    def messageSending(self, s):
+        # Handle sending messages to server
         while True:
-            value = input("Write a message: \n")
-            s.send(value.encode())
+            try:
+                value = input("Me: ")
+                s.sendall(value.encode())
+            except ConnectionResetError:
+                print("Server Closed. GoodBye")
+                break
 
         s.close()
+
+    def messageReciving(self):
+        while True:
+            return
 
 
 Client()
