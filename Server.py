@@ -9,11 +9,12 @@ class Server:
         self.clients = []
 
         self.createServerSocket()
-
         self.createConnections()
 
     def createServerSocket(self):
-        # defult TCP connnection
+        """
+        Create a socket for the server to use
+        """
         self.serverSocket = socket.socket()
 
         port = 20500
@@ -38,10 +39,15 @@ class Server:
             thread.start()
 
     def handleMessages(self, conn, addr):
+        """
+        Uses a thread for each client to monitor any messages being recived
+        """
         while True:
             try:
                 message = conn.recv(1024).decode()
-                print(message)
+                if not message:
+                    break
+                print(addr, " - ", message)
             # Exit loop when client session ends
             except ConnectionResetError:
                 print(addr, " has left the chat")
